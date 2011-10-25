@@ -68,7 +68,10 @@ def xmldiffstr(old, new, old_name='old', new_name='new', unified=True):
 def _parser():
 	p = optparse.OptionParser('Usage: %prog [OPTIONS] OLD_FILE NEW_FILE')
 
-	p.add_option('-c', '--context', type='int', default=None, \
+	p.add_option('-c', '--context', action='store_false', default=True, \
+		dest='unified', help='Give a context-diff instead of the default unified-diff')
+		
+	p.add_option('-n', '--numlines', type='int', default=None, \
 		dest='context', help='Number of lines of context.')
 
 	return p
@@ -82,7 +85,7 @@ def main(args=None):
 		parser.error('You must specify two files.')
 	old, new = args[:2]
 
-	diff_args = {'lineterm': ''} # no newlines in the header
+	diff_args = {'lineterm': '', 'unified': opts.unified} # no newlines in the header
 	if opts.context is not None:
 		if opts.context < 1:
 			parser.error('Context should be a positive integer.')
